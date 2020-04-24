@@ -1,19 +1,24 @@
-#3be1fc3679dc9b366750ea893cb9cde97c93d4cf920cb522bcffad69ab0f547ed33370a3aba59b946a1c2
-#3be1fc3679dc9b366750ea893cb9cde97c93d4cf920cb522bcffad69ab0f547ed33370a3aba59b946a1c2
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import random
 import time
 
+vk_session = vk_api.VkApi(
+    token='3be1fc3679dc9b366750ea893cb9cde97c93d4cf920cb522bcffad69ab0f547ed33370a3aba59b946a1c2')
+
+vk = vk_session.get_api()
+
+
 def write_msg(user_id, message):
     vk.method('messages.send', {'user_id': user_id, 'message': message})
+
 
 sth_wrong = ['Ты определённо делаешь что-то не так.', 'Попробуй ещё раз', 'Давай ещё разок',
              'Это было близко, но всё-таки не то, что я хочу от тебя услышать.', 'НЕ ТО!!!']
 
-world_list = ['Канон', 'Нереальный Пидорасинг', 'Родомагия +++', 'Все гады']
+world_list = ['Канон', 'НП', 'Родомагия +++', 'Все гады']
 
-caracter = []
+character = []
 
 Yaoi = True
 System = False
@@ -21,10 +26,8 @@ Luck = False
 Regen = False
 Mental = False
 
-def main():
-    vk_session = vk_api.VkApi(
-        token='3be1fc3679dc9b366750ea893cb9cde97c93d4cf920cb522bcffad69ab0f547ed33370a3aba59b946a1c2')
 
+def main():
     longpoll = VkBotLongPoll(vk_session, group_id=192035692)
 
     lpl = longpoll.listen()
@@ -36,7 +39,7 @@ def main():
                                  f"Чтобы начать новую жизнь, напишите Start \n"
                                  f"Чтобы узнать что это за хрень, напишите Help",
                          random_id=random.randint(0, 2 ** 64))
-        if event.type == VkEventType.MESSAGE_NEW:
+        if event.type == VkBotEventType.MESSAGE_NEW:
             if event.to_me:
                 request = event.text
                 done = False
@@ -46,7 +49,8 @@ def main():
                         done = True
                     elif 'help' in request.lower():
                         write_msg(event.user_id, "'Попадун' - текстовая РПГ, "
-                                                 "описывающая жизнь самого обычного попаданца в зеркало мира Гарри Поттера. "
+                                                 "описывающая жизнь самого обычного попаданца "
+                                                 "в зеркало мира Гарри Поттера. "
                                                  "И именно вы сможете выбрать, станет ли ваш герой мега-нагибатором, "
                                                  "или же умрёт в первую неделю попадания."
                                                  " Сложный выбор, опасные приключения, искромётный(нет) юмор и,"
@@ -54,9 +58,10 @@ def main():
                                                  "Для начала вашего попадания напишите Start")
                     else:
                         write_msg(event.user_id, random.choice(sth_wrong))
-                gods_to_give_you_POWER(lpl)
+                gods_to_give_you_power(lpl)
 
-def gods_to_give_you_POWER(event):
+
+def gods_to_give_you_power(event):
     write_msg(event.user_id, f'Жил был на свете самый обычный российский ШКОЛЬНИК '
                              f'(oh god, заявка на оригинальность, да?! Не ОРС, А ОРШ!!! Я сама неожиданность!)\n'
                              f'И был он большим фанатом саги о Гарри Поттере. Читал все книги, смотрел все фильмы, '
@@ -88,7 +93,7 @@ def gods_to_give_you_POWER(event):
                              f'Чобы узнать о способности больше, напишите "@номер способности@ что это?"')
     done = False
     while not done:
-        if event.type == VkEventType.MESSAGE_NEW:
+        if event.type == VkBotEventType.MESSAGE_NEW:
             if event.to_me:
                 request = event.text
                 if 'что это' in request.lower():
@@ -97,7 +102,7 @@ def gods_to_give_you_POWER(event):
                                                  'позволяющий удобно делать штуки, '
                                                  'с трудом достающиеся обычным обитателям мира')
                     elif '2' in request.lower():
-                        write_msg(event.user_id, 'Никакого яоя и юри! '
+                        write_msg(event.user_id, 'Никакого яоя! '
                                                  'Никто из парней не посягнёт на вашу мужскую честь. НИКТО.')
                     elif '3' in request.lower():
                         write_msg(event.user_id, 'Пока есть хоть кусочек - вы живы!')
@@ -108,31 +113,31 @@ def gods_to_give_you_POWER(event):
                                                  'Волдеморды и прочих мозгоклюев в ваше сознание.')
                 elif 'беру' in request.lower():
                     if '1' in request.lower():
-                        System = True
-                        universe = random.choose(world_list)
+                        sys = True
+                        universe = random.choice(world_list)
                         done = True
                     elif '2' in request.lower():
-                        Yaoi = False
-                        universe = random.choose(world_list.remove([1]))
+                        y = False
+                        universe = random.choice(world_list.remove('НП'))
                         done = True
                     elif '3' in request.lower():
-                        Regen = True
-                        universe = random.choose(world_list)
+                        ren = True
+                        universe = random.choice(world_list)
                         done = True
                     elif '4' in request.lower():
-                        Luck = True
-                        universe = random.choose(world_list)
+                        lk = True
+                        universe = random.choice(world_list)
                         done = True
                     elif '5' in request.lower():
-                        Mental = True
-                        universe = random.choose(world_list)
+                        mental = True
+                        universe = random.choice(world_list)
                         done = True
 
                 else:
                     write_msg(event.user_id, random.choice(sth_wrong))
 
 
-def before_hog_1(sys, reg, luck, mental, universe, event, caracter, yaoi=True):
+def before_hog_1(sys, reg, luck, mental, universe, event, char, yaoi=True):
     write_msg(event.user_id, 'Выбрав наиболее понравившийся ему в списке пункт, '
                              'ОРШ громко прокричал его номер в пустоту. Неожиданоо его закрутило и завертело; '
                              'тело парня скрутило жгучей болью, но он даже не смог облегчить её закричав: '
@@ -156,7 +161,7 @@ def before_hog_1(sys, reg, luck, mental, universe, event, caracter, yaoi=True):
                                  f'4) Время паники!')
     done = False
     while not done:
-        if event.type == VkEventType.MESSAGE_NEW:
+        if event.type == VkBotEventType.MESSAGE_NEW:
             if event.to_me:
                 request = event.text
                 if request == '1':
@@ -166,7 +171,21 @@ def before_hog_1(sys, reg, luck, mental, universe, event, caracter, yaoi=True):
                                                  'Гарри решил оставшееся время до подъёма просидеть в чулане, '
                                                  'уплетая за обе щёки честно добытые припасы.')
                         done = True
-                    elif not luck:
+                    elif reg:
+                        write_msg(event.user_id, f'Неожиданно, на самом интересном месте '
+                                                 f'(поедании какого-то супа прямо из кастрюли) '
+                                                 f'в кухню ворвался толстый высокий мужчина с пышными усами. \n'
+                                                 f'Дядя Вернон, понял Поттер. \n'
+                                                 f'Увидев в руках нашего героя уже почти пустую кастрюлю '
+                                                 f'своего любимого крем-супа, Вернон проревел: \n-Убью!\n'
+                                                 f'то, что его дни сочтены, Поттер тоже очень хорошо понял, '
+                                                 f'а потому резко стартанул в сторону спасительной двери на улицу.\n'
+                                                 f'Увы и ах, удача снова оказалась не на стороне нашего героя. '
+                                                 f'Всю свою оставшуюся жизнь Гарри провёл в '
+                                                 f'правительственной лаборатории, '
+                                                 f'где выдающиеся учёные со всего мира '
+                                                 f'исследовали его феноменальную регенерацию. ')
+                    else:
                         write_msg(event.user_id, f'Неожиданно, на самом интересном месте '
                                                  f'(поедании какого-то супа прямо из кастрюли) '
                                                  f'в кухню ворвался толстый высокий мужчина с пышными усами. \n'
@@ -178,7 +197,7 @@ def before_hog_1(sys, reg, luck, mental, universe, event, caracter, yaoi=True):
                                                  f'Увы и ах, удача снова оказалась не на стороне нашего героя, '
                                                  f'так что все оставшиеся три недели до своего одиннадцатого '
                                                  f'дня рождения он провёл в больничке, '
-                                                 f'где ему лечили несколько переломов, вывихов и сотрясение мозга ')
+                                                 f'где ему лечили несколько переломов и сотрясение мозга ')
                         done = True
                 elif request == '2':
                     pass
@@ -187,8 +206,22 @@ def before_hog_1(sys, reg, luck, mental, universe, event, caracter, yaoi=True):
                         write_msg(event.user_id, f'Нашему герою космически повезло - '
                                                  f'Вернона не было дома, '
                                                  f' и пункт "Наорать на Дурсля" откладывался на неопределённый срок.')
+                    if reg:
+                        write_msg(event.user_id, f'Поднявшись на второй этаж, Поттер обнаружил спящего Вернона. '
+                                                 f'После трёх секунд отборного мата со стороны поподанца, '
+                                                 f'Вернон вконец озверел. '
+                                                 f'\n *** \n'
+                                                 f'Всю свою оставшуюся жизнь Гарри провёл в '
+                                                 f'правительственной лаборатории, '
+                                                 f'где выдающиеся учёные со всего мира '
+                                                 f'исследовали его феноменальную регенерацию.')
                     else:
-                        write_msg(event.user_id, f'Поднявшись на второй этаж, Поттер обнаружил Вернона  ')
+                        write_msg(event.user_id, f'Поднявшись на второй этаж, Поттер обнаружил спящего Вернона. '
+                                                 f'После трёх секунд отборного мата со стороны поподанца, '
+                                                 f'Вернон вконец озверел. '
+                                                 f'\n *** \n'
+                                                 f'Оставшееся время до своего дня рождения время '
+                                                 f'Гарри провёл в больничке, где ему лечили кучу переломов и гематом.')
                 elif request == '4':
                     if sys:
                         write_msg(event.user_id, f'\n ***\n'
@@ -210,8 +243,6 @@ def before_hog_1(sys, reg, luck, mental, universe, event, caracter, yaoi=True):
                         done = True
                     else:
                         write_msg(event.user_id, random.choice(sth_wrong))
-
-
 
 
 if __name__ == '__main__':
